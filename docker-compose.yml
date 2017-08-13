@@ -1,0 +1,26 @@
+version: '2'
+services:
+  db:
+    image: mysql/mysql-server:5.7
+    container_name: mysql57
+    environment:
+      MYSQL_ROOT_PASSWORD: hellokoding
+    ports:
+    - "3306:3306"
+    volumes:
+    - /data/db/mysql:/var/lib/mysql
+    restart: always
+
+  app:
+    image: maven:3.5-jdk-8
+    container_name: rest
+    volumes:
+      - .:/app
+      - $HOME/.m2:/root/.m2
+    working_dir: /app
+    ports:
+      - "8080:8080"
+    command: mvn clean spring-boot:run
+    restart: always
+    depends_on:
+      - db
